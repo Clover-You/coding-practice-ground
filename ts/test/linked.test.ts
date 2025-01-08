@@ -93,4 +93,16 @@ describe('linked list', () => {
     expect(list.root).toBeFalsy()
     expect(list.tail).toBeFalsy()
   })
+
+  it('insert at node', () => {
+    const list = new LinkedList()
+    const node = new LinkedNode(1)
+
+    list.root = node
+    list.tail = node
+
+    list.insertAt(2, node)
+
+    expect(list.toArray()).toEqual([1, 2])
+  })
 })

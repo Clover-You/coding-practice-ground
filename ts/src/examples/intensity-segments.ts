@@ -23,22 +23,6 @@ function isWithoutNode(begin: number, end: number, index: number) {
   return begin < index && end > index
 }
 
-function insertNextNode(index: number, amount: number, curr?: LinkedNode<IntensitySegment>) {
-  const node = new LinkedNode<IntensitySegment>({ start: index, value: amount })
-  if (!curr)
-    return node
-
-  const currNext = curr.next
-  curr.next = node
-  node.next = currNext
-  node.prev = curr
-
-  if (currNext)
-    currNext.prev = node
-
-  return node
-}
-
 function shouldInsertAtEnd(index: number, node?: LinkedNode<IntensitySegment>) {
   if (node)
     return node.item.value !== 0 && node.item.start < index
@@ -63,7 +47,7 @@ export class IntensitySegments {
   private ensureInitialized(from: number, to: number, amount: number) {
     if (!this.segments.root || !this.segments.tail) {
       this.segments.root = new LinkedNode<IntensitySegment>({ start: from, value: amount })
-      this.segments.tail = insertNextNode(to, 0, this.segments.root)
+      this.segments.tail = this.segments.insertAt({ start: to, value: 0 }, this.segments.root)
       return true
     }
     return false
@@ -90,7 +74,7 @@ export class IntensitySegments {
       const currAmount = curr.item.value
 
       if (isWithoutNode(currentPosition, nextPosition, from)) {
-        const node = insertNextNode(from, currAmount + amount, curr)
+        const node = this.segments.insertAt({ start: from, value: currAmount + amount }, curr)
         curr = node.next
         continue
       }
@@ -112,7 +96,7 @@ export class IntensitySegments {
     }
 
     if (shouldInsertAtEnd(to, this.segments.tail))
-      this.segments.tail = insertNextNode(to, 0, this.segments.tail)
+      this.segments.tail = this.segments.insertAt({ start: to, value: 0 }, this.segments.tail)
   }
 
   public set(from: number, to: number, amount: number) {

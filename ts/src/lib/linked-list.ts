@@ -26,6 +26,23 @@ export class LinkedList<T> {
       this.tail = next ?? prev
   }
 
+  public insertAt(item: T, curr?: LinkedNode<T>) {
+    const node = new LinkedNode<T>(item)
+
+    if (!curr)
+      return node
+
+    const currNext = curr.next
+    curr.next = node
+    node.next = currNext
+    node.prev = curr
+
+    if (currNext)
+      currNext.prev = node
+
+    return node
+  }
+
   public toArray(): T[] {
     let curr = this.root
     const recors: T[] = []
