@@ -1,0 +1,4 @@
+[*.{ts,js,json}]
+indent_size = 2
+spaces_around_operators = true
+indent_brace_style=K&R
